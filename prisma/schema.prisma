@@ -1,0 +1,102 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id       String  @id @default(cuid())
+  clerkId  String  @unique
+  username String?
+  imageUrl String?
+
+  credit Int @default(5)
+  karma  Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  confessions Confession[]
+  reactions   Reaction[]
+  payments    Payment[]
+}
+
+model Payment {
+  id        String        @id @default(cuid())
+  amount    Float
+  credits   Int
+  status    PaymentStatus @default(PENDING)
+  createdAt DateTime      @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId]) // juste pour acceder a l'utilisateur rapidement
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+model Confession {
+  id          String   @id @default(cuid())
+  content     String
+  isAnonymous Boolean  @default(true)
+  category    Category @default(BUG)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  authorId  String
+  author    User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  reactions Reaction[]
+
+  @@index([authorId])
+}
+
+enum Category {
+  BUG
+  GIT_DISASTER
+  PRODUCTION_FAIL
+  COFFEE_NEEDED
+  UPDATE_PROBLEM
+  VERSION_PROBLEM
+}
+
+model Reaction {
+  id    String @id @default(cuid())
+  emoji Emoji
+
+  createdAt DateTime @default(now())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  confessionId String
+  confession   Confession @relation(fields: [confessionId], references: [id], onDelete: Cascade)
+
+  @@unique([confessionId, emoji, userId]) //ceci est une clé candidate, pourrait devenir une clé primaire si on voudrait
+  @@index([confessionId])
+  @@index([userId])
+}
+
+enum Emoji {
+  LAUGH
+  HEART
+  FIRE
+  SALUTE
+  SKULL
+  FACEPALM
+  THUMBS_UP
+}
