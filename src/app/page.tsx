@@ -1,11 +1,15 @@
 import { getConfessions } from "@/actions/confession.action";
 import { getCurrentUser } from "@/actions/user.action";
 import ConfessionCard from "@/components/ConfessionCard";
-
+import { auth } from "@clerk/nextjs/server";
 
 export default async function Home() {
-  const { confessions } = await getConfessions(1, 5);
-  const currentUser = await getCurrentUser();
+  const [{ confessions }, { userId }] = await Promise.all([
+    getConfessions(1, 5),
+    auth(),
+  ]);
+
+  const currentUser = userId ? await getCurrentUser() : null;
 
   return (
     <div >
