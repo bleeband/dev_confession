@@ -1,34 +1,39 @@
 import { Show, SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import Link from "next/link"
 
 export function Header() {
     return (
-        <header className="sticky top-0 z-50 bg-gray-900/80 border-gray-800">
-            <div className="flex container mx-auto px-4 py-4 justify-between items-center">   
-
-                <a href="/" className="flex items-center gap-2">
+        <header className="sticky top-0 z-50 bg-gray-900/80 border-b border-gray-800">
+            <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+                <Link href="/" className="flex items-center gap-2">
                     <span className="text-3xl">🎭</span>
-                    <span className="text-xl font-bold bg-gradient-to-r from-purple-400 via-pink-500 bg-clip-text text-transparent">Dev Confession</span>
-                </a>
+                    <span className="text-xl font-bold bg-gradient-to-r from-blue-400 to-yellow-500 bg-clip-text text-transparent">DevConfession</span>
+                </Link>
+            
 
-                <nav className="flex gap-4 items-center text-gray-300">
-                    <a href="/confessions" className="text-gray-300 hover:text-white transition-colors">Confessions</a>
-                    <a href="/leaderboard" className="text-gray-300 hover:text-white transition-colors">Leaderboard</a>
-
-                    <Show when="signed-in">
-                        <a href="/new" className="text-gray-300 hover:text-white transition-colors">Nouvelle confession</a>
-                        <UserButton afterSwitchSessionUrl="/" />
-                    </Show>
-
+                <nav className="flex items-center gap-6">
+                    <Link href="/confessions" className="text-gray-300 hover:text-white transition">
+                    Confessions
+                    </Link>
+                    <Link href="/leaderboard" className="text-gray-300 hover:text-white transition">
+                    Top confessions 
+                    </Link>
                     <Show when="signed-out">
                         <SignInButton mode="modal">
-                            <button className="text-gray-300 hover:text-white transition-colors rounded-md px-4 py-2">Se connecter</button>
+                            <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
+                            Se Connecter 
+                            </button>
                         </SignInButton>
                     </Show>
 
+                    <Show when="signed-in">
+                        <Link href="/new" className="bg-gradient-to-r from-blue-600 to-yellow-600 hover:from-blue-700 hover:to-yellow-700 text-white px-4 py-2 rounded-lg transition">
+                        + Confession
+                        </Link>
+                        <UserButton afterSwitchSessionUrl="/" />
+                    </Show>
                 </nav>
-
-            </div>  
-
+            </div>
         </header>
     );
 }
