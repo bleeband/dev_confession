@@ -27,6 +27,9 @@ model User {
   confessions Confession[]
   reactions   Reaction[]
   payments    Payment[]
+
+  comments  Comment[]
+  reports CommentReport[]
 }
 
 model Payment {
@@ -42,13 +45,6 @@ model Payment {
   @@index([userId]) // juste pour acceder a l'utilisateur rapidement
 }
 
-enum PaymentStatus {
-  PENDING
-  COMPLETED
-  FAILED
-  REFUNDED
-}
-
 model Confession {
   id          String   @id @default(cuid())
   content     String
@@ -62,16 +58,9 @@ model Confession {
   author    User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
   reactions Reaction[]
 
-  @@index([authorId])
-}
+  comments  Comment[]
 
-enum Category {
-  BUG
-  GIT_DISASTER
-  PRODUCTION_FAIL
-  COFFEE_NEEDED
-  UPDATE_PROBLEM
-  VERSION_PROBLEM
+  @@index([authorId])
 }
 
 model Reaction {
@@ -91,6 +80,51 @@ model Reaction {
   @@index([userId])
 }
 
+model Comment {
+  id  String  @id   @default(cuid())
+  content String
+  isAnonymous Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime  @updatedAt
+
+  authorId  String
+  author  User  @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  confessionId  String
+  confession  Confession  @relation(fields: [confessionId], references: [id], onDelete: Cascade)
+
+  // relation reflexive pour les réponses aux commentaires
+
+  parentId  String?
+  parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   Comment[] @relation("CommentReplies")
+
+  reports   CommentReport[]
+
+  @@index([parentId])
+  @@index([confessionId])
+  @@index([authorId])
+  @@index([createdAt])
+  @@index([updatedAt])
+}
+
+model CommentReport {
+  id        String   @id @default(cuid())
+  reason    ReportReason
+  createdAt DateTime @default(now())
+
+  commentId String
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  reporterId String
+  reporter   User   @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+
+  @@unique([commentId, reporterId])
+  
+  @@index([commentId])
+  @@index([reporterId])
+}
+
 enum Emoji {
   LAUGH
   HEART
@@ -99,4 +133,29 @@ enum Emoji {
   SKULL
   FACEPALM
   THUMBS_UP
+}
+
+enum ReportReason {
+  SPAM
+  INAPPROPRIATE
+  FRAUD
+  HARASSMENT
+  DISCRIMINATION
+  OTHER
+}
+
+enum Category {
+  BUG
+  GIT_DISASTER
+  PRODUCTION_FAIL
+  COFFEE_NEEDED
+  UPDATE_PROBLEM
+  VERSION_PROBLEM
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
 }

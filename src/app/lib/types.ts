@@ -1,4 +1,4 @@
-import { Category, Emoji } from "@/generated/prisma/client";
+import { Category, Emoji, ReportReason } from "@/generated/prisma/client";
 
 export const EMOJI_MAP : Record<Emoji, string> = { // un record c'est comme pour map le nom
     LAUGH : "😂",
@@ -19,6 +19,15 @@ export const CATEGORY_MAP : Record<Category, {label: string, icon: string}> ={
     VERSION_PROBLEM :   {label: "version problem", icon: "🆚"},
 }
 
+export const REPORT_REASON_MAP : Record<ReportReason, {label: string, icon: string}> = {
+    SPAM: {label: "spam", icon: "📧"},
+    INAPPROPRIATE: {label: "inappropriate", icon: "🚫"},
+    FRAUD: {label: "fraude", icon: "💳"},
+    HARASSMENT: {label: "proposition offensive", icon: "😡"},
+    DISCRIMINATION: {label: "discrimination", icon: "⚖️"},
+    OTHER: {label: "autre", icon: "❓"},
+};
+
 // jointure de confession et de reaction pour avoir la confession avec le nombre de reaction et les reaction
 export type ConfessionWithReactions = {
     id: string;
@@ -36,8 +45,22 @@ export type ConfessionWithReactions = {
     }[];
     _count: {
         reactions: number;
+        comments: number;
     };
 }
+
+export type CommentCorrect = {
+    id: string;
+    content: string;
+    isAnonymous: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+    author: {username: string | null; imageUrl: string | null;} | null;
+    isHidden?: boolean;
+    canDelete?: boolean;
+    
+    replies?: CommentCorrect[];
+};
 
 export const CREDIT_PACK = [
     {id: "pack_10", credits: 10, price: 0.99, label:"10 credits", popular: false},
