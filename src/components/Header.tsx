@@ -1,4 +1,4 @@
-import { Show, SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { Show, SignInButton, UserButton } from "@clerk/nextjs";
 import Link from "next/link"
 
 export function Header() {
@@ -16,19 +16,19 @@ export function Header() {
                     Confessions
                     </Link>
                     <Link href="/leaderboard" className="text-gray-300 hover:text-white transition">
-                    Top confessions 
+                    Classement
                     </Link>
                     <Show when="signed-out">
                         <SignInButton mode="modal">
                             <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
-                            Se Connecter 
+                            Se connecter
                             </button>
                         </SignInButton>
                     </Show>
 
                     <Show when="signed-in">
                         <Link href="/new" className="bg-gradient-to-r from-blue-600 to-yellow-600 hover:from-blue-700 hover:to-yellow-700 text-white px-4 py-2 rounded-lg transition">
-                        + Confession
+                        + Publier
                         </Link>
                         <UserButton afterSwitchSessionUrl="/" />
                     </Show>

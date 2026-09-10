@@ -11,21 +11,21 @@ export const EMOJI_MAP : Record<Emoji, string> = { // un record c'est comme pour
 }
 
 export const CATEGORY_MAP : Record<Category, {label: string, icon: string}> ={
-    BUG :               {label: "bug", icon: "🐛"},
-    GIT_DISASTER :      {label: "git disaster", icon: "💥"},
-    PRODUCTION_FAIL :   {label: "production fail", icon: "🟥"},
-    COFFEE_NEEDED :     {label: "coffee needed", icon: "☕"},
-    UPDATE_PROBLEM :    {label: "update problem", icon: "😰"},
-    VERSION_PROBLEM :   {label: "version problem", icon: "🆚"},
+    BUG :               {label: "Bug", icon: "🐛"},
+    GIT_DISASTER :      {label: "Catastrophe Git", icon: "💥"},
+    PRODUCTION_FAIL :   {label: "Panne en production", icon: "🟥"},
+    COFFEE_NEEDED :     {label: "Besoin de café", icon: "☕"},
+    UPDATE_PROBLEM :    {label: "Problème de mise à jour", icon: "😰"},
+    VERSION_PROBLEM :   {label: "Problème de version", icon: "🆚"},
 }
 
 export const REPORT_REASON_MAP : Record<ReportReason, {label: string, icon: string}> = {
-    SPAM: {label: "spam", icon: "📧"},
-    INAPPROPRIATE: {label: "inappropriate", icon: "🚫"},
-    FRAUD: {label: "fraude", icon: "💳"},
-    HARASSMENT: {label: "proposition offensive", icon: "😡"},
-    DISCRIMINATION: {label: "discrimination", icon: "⚖️"},
-    OTHER: {label: "autre", icon: "❓"},
+    SPAM: {label: "Pourriel", icon: "📧"},
+    INAPPROPRIATE: {label: "Contenu inapproprié", icon: "🚫"},
+    FRAUD: {label: "Fraude", icon: "💳"},
+    HARASSMENT: {label: "Propos offensants", icon: "😡"},
+    DISCRIMINATION: {label: "Discrimination", icon: "⚖️"},
+    OTHER: {label: "Autre", icon: "❓"},
 };
 
 // jointure de confession et de reaction pour avoir la confession avec le nombre de reaction et les reaction
@@ -63,10 +63,10 @@ export type CommentCorrect = {
 };
 
 export const CREDIT_PACK = [
-    {id: "pack_10", credits: 10, price: 0.99, label:"10 credits", popular: false},
-    {id: "pack_50", credits: 50, price: 3.99, label:"50 credits", popular: true},
-    {id: "pack_100", credits: 100, price: 6.99, label:"100 credits", popular: false},
-    {id: "pack_500", credits: 500, price: 29.99, label:"500 credits", popular: false},
+    {id: "pack_10", credits: 10, price: 0.99, label:"10 crédits", popular: false},
+    {id: "pack_50", credits: 50, price: 3.99, label:"50 crédits", popular: true},
+    {id: "pack_100", credits: 100, price: 6.99, label:"100 crédits", popular: false},
+    {id: "pack_500", credits: 500, price: 29.99, label:"500 crédits", popular: false},
 ] as const;
 
 export type packId = typeof CREDIT_PACK[number]["id"];

@@ -45,7 +45,7 @@ export default function ConfessionCard({ confession,currUserId }: ConfessionCard
     }
 
     function partagerSurX() {
-        const maxLength = 200; // Maximum length for a tweet
+        const maxLength = 200;
         const truncatedContent = confession.content.length > maxLength ? confession.content.substring(0, maxLength) + "..." : confession.content;
         const textTweet = ` Confession Dev : \n\n${truncatedContent}\n\n${categoryInfo.icon} #DevConfession #ServiceWeb`;
         const tweetIntentUrl = `https://twitter.com/intent/tweet`;
@@ -81,7 +81,7 @@ export default function ConfessionCard({ confession,currUserId }: ConfessionCard
                     : (
                         <>
                             {confession.author.imageUrl && (
-                                <img src={confession.author.imageUrl} alt="Author" className="w-10 h-10 rounded-full" />
+                                <img src={confession.author.imageUrl} alt="Avatar de l’auteur" className="w-10 h-10 rounded-full" />
                             )}
                         </>
 
@@ -94,7 +94,7 @@ export default function ConfessionCard({ confession,currUserId }: ConfessionCard
                         const count = reactionCounts[emoji] || 0;
                         const hasReacted = userReaction.includes(emoji);
                         return (
-                        <button className="reaction-button" data-reacted={hasReacted} onClick={() => handleReaction(emoji)} key={emoji}>
+                        <button aria-label={`Réagir avec ${EMOJI_MAP[emoji]}`} className="reaction-button" data-reacted={hasReacted} onClick={() => handleReaction(emoji)} key={emoji}>
                             <span>
                                 {EMOJI_MAP[emoji]} {count}
                             </span>
@@ -103,8 +103,8 @@ export default function ConfessionCard({ confession,currUserId }: ConfessionCard
                         )
                     })}
 
-                    <button onClick={() => setShowComments((v) => !v)} className="share-button" title="Afficher commentaires">
-                        <span>{showComments ? "Masquer commentaires" : "Afficher commentaires"}</span>
+                    <button onClick={() => setShowComments((v) => !v)} className="share-button" title={showComments ? "Masquer les commentaires" : "Afficher les commentaires"}>
+                        <span>{showComments ? "Masquer les commentaires" : "Afficher les commentaires"}</span>
                         <span>{commentCount > 0 ? commentCount : ""}</span>
                     </button>
 

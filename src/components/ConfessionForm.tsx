@@ -13,7 +13,6 @@ export default function ConfessionForm() {
         setIsSubmitted(true);
         try {
             formData.set("isAnonymous", isAnonymous.toString());
-            // Submit the form data to the server
             await createConfession(formData);
 
         } catch (error) {
@@ -29,7 +28,7 @@ export default function ConfessionForm() {
         <form action={handleSubmit} className='space-y-6'>
 
             <div>
-                <label className='block text-sm font-medium text-gray-300 mb-2'>Categorie de votre fail</label>
+                <label className='block text-sm font-medium text-gray-300 mb-2'>Catégorie de votre fail</label>
                 <div className='grid grid-cols-2 md:grid-cols-3 gap-3'>
                     {Object.entries(CATEGORY_MAP).map(([key, {label, icon}]) => (
                         <label key={key} 
@@ -59,7 +58,7 @@ export default function ConfessionForm() {
                 required
                 />
                 <div className='flex justify-between mt-1'>
-                    <span>Minimum 10 caracteres</span>
+                    <span>Minimum 10 caractères</span>
                     <span className={`text-xs ${charCount > 450 ? "text-red-400" : "text-gray-500"}`}>{charCount}/500</span>
                 </div>
 
@@ -69,19 +68,21 @@ export default function ConfessionForm() {
                 <button 
                     type='button' 
                     onClick={() => setIsAnonymous(!isAnonymous)}
+                    aria-label={isAnonymous ? "Publier anonymement" : "Afficher mon pseudo"}
                     className={`relative w-14 h-7 rounded-full transition-colors ${isAnonymous ? "bg-blue-600" : "bg-gray-700"}`}>
                         <span className={`absolute top-1 w-5 h-5 bg-white rounded-full transition-transform ${isAnonymous ? "left-8" : "left-1"}`} />
                 </button>
                 <span className='text-gray-300'>
-                    {isAnonymous ? "Anonyme" : "Avec mon Pseudo"}
+                    {isAnonymous ? "Anonyme" : "Avec mon pseudo"}
                 </span>
             </div>
 
             <button 
                 type='submit' 
+                disabled={isSubmitted}
                 className='w-full bg-gradient-to-r from-blue-400 to-yellow-500 hover:from-blue-500 hover:to-yellow-600 
                 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-lg transition'>
-                    Confesser
+                    {isSubmitted ? "Publication..." : "Publier"}
             </button>
             
         </form>

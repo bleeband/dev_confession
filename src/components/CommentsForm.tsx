@@ -51,6 +51,7 @@ export function CommentForm({ confessionId, parentId, onSuccess }: Props) {
                 required
                 disabled={isSubmitting}
                 placeholder="Écris ton commentaire..."
+                aria-label="Votre commentaire"
                 className="min-h-20 w-full rounded border border-slate-600 bg-slate-800 p-2 text-slate-100"
             />
             {error && <p className="text-sm text-red-400">{error}</p>}
