@@ -7,10 +7,10 @@
   --color-surface-hover: #1F2937;
 
   /* Couleurs principales */
-  --color-primary: #8B5CF6;
-  --color-primary-hover: #7C3AED;
-  --color-secondary: #22D3EE;
-  --color-accent: #F472B6;
+  --color-primary: #2563EB;
+  --color-primary-hover: #1D4ED8;
+  --color-secondary: #FACC15;
+  --color-accent: #FACC15;
 
   /* Texte */
   --color-text: #F8FAFC;
@@ -19,7 +19,7 @@
 
   /* Bordures */
   --color-border: #293548;
-  --color-border-focus: #A78BFA;
+  --color-border-focus: #60A5FA;
 
   /* États */
   --color-success: #34D399;
@@ -31,7 +31,7 @@
 body {
   color: var(--color-text);
   background:
-    radial-gradient(circle at top, rgb(139 92 246 / 25%), transparent 35%),
+    radial-gradient(circle at top, rgb(37 99 235 / 22%), transparent 35%),
     var(--color-background);
   scroll-behavior: smooth;
   scrollbar-color: calc();
@@ -46,7 +46,7 @@ body {
 
 .card:hover {
   background-color: var(--color-surface-hover);
-  border-color: var(--color-primary);
+  border-color: var(--color-secondary);
 }
 
 .button-primary {
@@ -56,4 +56,51 @@ body {
 
 .button-primary:hover {
   background-color: var(--color-primary-hover);
+}
+
+.confession-card {
+  display: flex;
+  min-height: 15rem;
+  flex-direction: column;
+  padding: 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  background: linear-gradient(145deg, rgb(17 24 39 / 94%), rgb(8 11 20 / 98%));
+  box-shadow: 0 8px 24px rgb(0 0 0 / 18%);
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.confession-card:hover {
+  border-color: var(--color-secondary);
+  background-color: var(--color-surface-hover);
+}
+
+.confession-card__reactions {
+  margin-top: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  padding-top: 1.25rem;
+}
+
+.reaction-button,
+.share-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  border-radius: 9999px;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.875rem;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.reaction-button[data-reacted="true"] { background: var(--color-primary); color: white; }
+.reaction-button[data-reacted="false"] { background: #E5E7EB; color: #1F2937; }
+.share-button { margin-left: auto; background: #334155; color: #E2E8F0; }
+.share-button:hover { background: var(--color-primary); color: white; }
+
+@media (max-width: 640px) {
+  .confession-card { min-height: 0; }
+  .share-button { margin-left: 0; }
 }

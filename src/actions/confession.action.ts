@@ -71,6 +71,7 @@ export async function getConfessions(page: number = 1, limit: number = 5, catego
                     _count : {
                         select : {
                             reactions : true,
+                            comments: true,
                         },
                     },
                 },

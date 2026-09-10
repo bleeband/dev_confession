@@ -1,74 +1,80 @@
 "use client";
- 
-import {useState } from "react";
-import React from "react";
+
+import { useState } from "react";
 import { createComment } from "@/actions/comments.action";
 
 type Props = {
-    confessionId : string;
+    confessionId: string;
     parentId?: string;
-}
- 
+    onSuccess?: () => void | Promise<void>;
+};
+
 const MAX_LENGTH = 300;
- 
-export function CommentForm({confessionId, parentId}: Props){
-    const [charCount, setCharCount] = useState(0);
+
+export function CommentForm({ confessionId, parentId, onSuccess }: Props) {
+    const [content, setContent] = useState("");
     const [isAnonymous, setIsAnonymous] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    async function handleSubmit(formData: FormData) {
-        // Handle form submission logic here
+    async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+        setError(null);
+
+        const formData = new FormData();
+        formData.set("confessionId", confessionId);
+        formData.set("content", content);
+        formData.set("isAnonymous", String(isAnonymous));
+        if (parentId) formData.set("parentId", parentId);
+
         setIsSubmitting(true);
         try {
-            formData.set("confessionId", confessionId);
-            formData.set("isAnonymous", isAnonymous.toString());
-            if (parentId) {
-                formData.set("parentId", parentId || "");
-            }
             await createComment(formData);
-            setCharCount(0); // Reset character count after successful submission
-            formData.delete("content"); // Clear the content field after successful submission
-        } catch (error) {
-            console.error("Error submitting comment:", error);
-            setError("Failed to submit comment. Please try again.");
-        }
-        finally {
+            setContent("");
+            setIsAnonymous(true);
+            await onSuccess?.();
+        } catch {
+            setError("Impossible de publier le commentaire. Réessaie.");
+        } finally {
             setIsSubmitting(false);
-            setError(null); // Clear error after handling submission
-            setCharCount(0); // Reset character count after handling submission
-            setIsAnonymous(true); // Reset anonymity to default after handling submission
         }
     }
 
     return (
-        <form action={handleSubmit}>
+        <form onSubmit={handleSubmit} className="mb-4 space-y-2">
             <textarea
-            name="content"
-            maxLength={MAX_LENGTH}
-            onChange={(e) => setCharCount(e.target.value.length)}
-            value={charCount > 0 ? undefined : ""}
+                name="content"
+                value={content}
+                onChange={(event) => setContent(event.target.value)}
+                maxLength={MAX_LENGTH}
+                minLength={2}
+                required
+                disabled={isSubmitting}
+                placeholder="Écris ton commentaire..."
+                className="min-h-20 w-full rounded border border-slate-600 bg-slate-800 p-2 text-slate-100"
             />
-            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
- 
-            <div className='flex items-center gap-3'>
+            {error && <p className="text-sm text-red-400">{error}</p>}
+
+            <div className="flex items-center gap-3">
                 <button
-                    type='button'
-                    onClick={() => setIsAnonymous(!isAnonymous)}
-                    className={`relative w-14 h-7 rounded-full transition-colors ${isAnonymous ? "bg-purple-600" : "bg-gray-700"}`}>
-                        <span className={`absolute top-1 w-5 h-5 bg-white rounded-full transition-transform ${isAnonymous ? "left-8" : "left-1"}`} />
+                    type="button"
+                    onClick={() => setIsAnonymous((value) => !value)}
+                    disabled={isSubmitting}
+                    className="rounded border border-slate-600 px-2 py-1 text-sm text-slate-200"
+                >
+                    {isAnonymous ? "Anonyme" : "Avec mon pseudo"}
                 </button>
-                <span className='text-gray-300'>
-                    {isAnonymous ? "Anonyme" : "Avec mon Pseudo"}
+                <span className="text-sm text-slate-300">
+                    {content.length}/{MAX_LENGTH}
                 </span>
-                <span className={`text-xs ${charCount > MAX_LENGTH - 50 ? "text-red-400" : "text-gray-500"}`}>
-                    {charCount}/{MAX_LENGTH}
-                </span>
- 
-                <button type="submit" >
-                    Publier
+                <button
+                    type="submit"
+                    disabled={isSubmitting || content.trim().length < 2}
+                    className="ml-auto rounded bg-blue-600 px-3 py-1 text-sm text-white disabled:opacity-50"
+                >
+                    {isSubmitting ? "Publication..." : "Publier"}
                 </button>
             </div>
         </form>
-    )
+    );
 }

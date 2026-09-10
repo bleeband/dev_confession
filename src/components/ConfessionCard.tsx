@@ -5,6 +5,8 @@ import { CATEGORY_MAP, ConfessionWithReactions, EMOJI_MAP } from "@/app/lib/type
 import { Emoji } from "@/generated/prisma/enums";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
+import { useState } from "react";
+import CommentsSection from "./CommentsSection";
 
 type ConfessionCardProps = {
     confession: ConfessionWithReactions,
@@ -14,6 +16,8 @@ type ConfessionCardProps = {
 export default function ConfessionCard({ confession,currUserId }: ConfessionCardProps) {
 
     const categoryInfo = CATEGORY_MAP[confession.category];
+    const [showComments, setShowComments] = useState(false);
+    const [commentCount, setCommentCount] = useState(confession._count.comments);
     
     // Calculate the reaction counts for each type of reaction // liste [{emoji:"LAUGH"}, {emoji:"LOVE"}, {emoji:"SAD"}, ...]
     const reactionCounts = confession.reactions.reduce((acc, reaction) => {
@@ -52,23 +56,26 @@ export default function ConfessionCard({ confession,currUserId }: ConfessionCard
 
     return (
         <>
-            <div className="m-4 p-4 border rounded-md shadow-md hover:bg-gray-800 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg">
+            <div className="confession-card">
+                
                 <div>
-                    <p className="text-gray-300">{categoryInfo.icon}</p>
-                    <p className="text-gray-300">{categoryInfo.label}</p>
+                    <p className="text-2xl">{categoryInfo.icon}</p>
+                    <p className="mt-2 text-lg text-slate-200">{categoryInfo.label}</p>
                 </div>
-                <div>
-                    <time dateTime={confession.createdAt.toISOString()} className="text-xs text-gray-500">
+                
+                <div className="mt-3">
+                    <time dateTime={confession.createdAt.toISOString()} className="text-sm text-slate-400">
 
                         {formatDistanceToNow(new Date(confession.createdAt), { addSuffix: true, locale: fr })}
 
                     </time>
-                    <p className="text-gray-200 text-sm leading-relaxed mb-4 break-words">{confession.content}</p>
+                    <p className="mt-2 break-words text-base leading-relaxed text-slate-100">{confession.content}</p>
                 </div>
-                <div className="mt-4 flex space-x-2 gap-2 mb-4">
+
+                <div className="mt-6 flex min-h-10 items-center gap-2">
                     {confession.isAnonymous ?
                     (    <>
-                            <p className="text-gray-500">Anonyme</p>
+                            <p className="text-slate-400">Anonyme</p>
                         </>
                     )
                     : (
@@ -82,15 +89,13 @@ export default function ConfessionCard({ confession,currUserId }: ConfessionCard
                     }
                 </div>
                 
-                <div className="flex items-center space-x-2 gap-2 mb-4 flex-wrap">
+                <div className="confession-card__reactions">
                     {(Object.keys(EMOJI_MAP) as Emoji[]).map((emoji) => {
                         const count = reactionCounts[emoji] || 0;
                         const hasReacted = userReaction.includes(emoji);
                         return (
-                        <button className={`flex items-center space-x-1 px-2 py-2 rounded-full text-sm ${
-                            hasReacted ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"
-                        }`} onClick={() => handleReaction(emoji)} key={emoji}>
-                            <span className="flex items-center space-x-1">
+                        <button className="reaction-button" data-reacted={hasReacted} onClick={() => handleReaction(emoji)} key={emoji}>
+                            <span>
                                 {EMOJI_MAP[emoji]} {count}
                             </span>
 
@@ -98,17 +103,22 @@ export default function ConfessionCard({ confession,currUserId }: ConfessionCard
                         )
                     })}
 
-                    <button onClick={() => partagerSurX()} className="flex items-center gap-1 px-3 py-2 rounded-full text-sm bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white transition-colors duration-200 ml-auto" title="Partager sur X">
+                    <button onClick={() => setShowComments((v) => !v)} className="share-button" title="Afficher commentaires">
+                        <span>{showComments ? "Masquer commentaires" : "Afficher commentaires"}</span>
+                        <span>{commentCount > 0 ? commentCount : ""}</span>
+                    </button>
+
+                    <button onClick={() => partagerSurX()} className="share-button" title="Partager sur X">
                         <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                         <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77Z" />
                         </svg>
                         <span>Partager</span>
                     </button>
-
                 </div>
-
-
-
+                
+                {showComments && (
+                    <CommentsSection confessionId={confession.id} currUserId={currUserId} nombreCommentaires={setCommentCount} />
+                )}
 
             </div>
         </>

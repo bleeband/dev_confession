@@ -34,7 +34,7 @@ export default function ConfessionForm() {
                     {Object.entries(CATEGORY_MAP).map(([key, {label, icon}]) => (
                         <label key={key} 
                         className='flex items-center gap-2 p-3 bg-gray-800 rounded-lg cursor-pointer.
-                        hover:bg-gray-700 transition border border-gray-700 has-[:checked]:border-purple-500
+                        hover:bg-gray-700 transition border border-gray-700 has-[:checked]:border-blue-500
                         text-white'>
                             <input name='category' value={key} type='radio' defaultChecked={key === "BUG"}/>
                             <span className='text-xl'>{icon}</span>
@@ -54,7 +54,7 @@ export default function ConfessionForm() {
                 onChange={(e) => setCharCount(e.target.value.length)}
                 
                 className="w-full bg-gray-800 border border-gray-700 rounded-lg p-4 text-white placeholder-gray-500 
-                focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
+                focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
 
                 required
                 />
@@ -69,7 +69,7 @@ export default function ConfessionForm() {
                 <button 
                     type='button' 
                     onClick={() => setIsAnonymous(!isAnonymous)}
-                    className={`relative w-14 h-7 rounded-full transition-colors ${isAnonymous ? "bg-purple-600" : "bg-gray-700"}`}>
+                    className={`relative w-14 h-7 rounded-full transition-colors ${isAnonymous ? "bg-blue-600" : "bg-gray-700"}`}>
                         <span className={`absolute top-1 w-5 h-5 bg-white rounded-full transition-transform ${isAnonymous ? "left-8" : "left-1"}`} />
                 </button>
                 <span className='text-gray-300'>

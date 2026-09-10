@@ -4,7 +4,7 @@ import ConfessionCard from "@/components/ConfessionCard";
 import { auth } from "@clerk/nextjs/server";
 
 export default async function ConfessionsPage() {
-    const [{ confessions }, { userId }] = await Promise.all([
+    const [{ confessions}, { userId }] = await Promise.all([
         getConfessions(1, 5),
         auth(),
     ]);
@@ -19,11 +19,12 @@ export default async function ConfessionsPage() {
                     <p className="text-gray-500">Aucune confession pour le moment.</p>
                 ) : (
                     confessions.map((confession) => (
-                        <ConfessionCard
-                            key={confession.id}
-                            confession={confession}
-                            currUserId={currentUser?.id ?? ""}
-                        />
+                        <div key={confession.id}>
+                            <ConfessionCard
+                                confession={confession}
+                                currUserId={currentUser?.id ?? ""}
+                            />
+                        </div>
                     ))
                 )}
             </div>

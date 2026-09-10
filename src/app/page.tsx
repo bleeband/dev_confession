@@ -18,9 +18,11 @@ export default async function Home() {
           <p className="text-gray-500 text-center">Une application de confession anonyme pour les développeurs</p>
 
 
-        <div className="grid md:grid-cols-3 gap-4 mt-6 space-y-4 rounded-md p-4">
+        <div className="mt-8 grid gap-6 md:grid-cols-3">
           {confessions.map((conf) => (
-            <ConfessionCard key={conf.id} confession={conf} currUserId={currentUser?.id ?? ""} />
+            <div key={conf.id}>
+              <ConfessionCard confession={conf} currUserId={currentUser?.id ?? ""} />
+            </div>
           ))}
 
         </div> 
